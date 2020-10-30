@@ -1,24 +1,17 @@
-# README
+# Rails Tutorial Log (sample_app)
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## 第4章
 
-Things you may want to cover:
+環境構築
 
-* Ruby version
+```bash
+git clone git@github.com:NUTFes/rails-tutorial.git workspace/rails-tutorial
+mv ./rails-tutrial ./sample_app
+git remote -v
+git remote set-url origin git@github.com:TsubasaOura/sample_app.git
+git remote -v
+git add -A
+git commit -m "First commit"
+git push
+```
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
