@@ -1345,3 +1345,92 @@ $ git push
 
 ログインしたログが残ってて不具合が起きている
 
+`app/views/shared/_error_messages.html.erb`
+
+```html
+<% if @user.errors.any? %>
+    <div id="error_explanation">
+        <div class="alert alert-danger">
+            The form contains <%= pluralize(@user.errors.count, "error") %>.
+        </div>
+        <ul>
+            <% @user.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+            <% end %>
+        </ul>
+    </div>
+<% end %>
+```
+
+
+
+`app/assets/stylesheets/custom.scss`
+
+```css
+.
+.
+/* forms */
+.
+.
+#error_explanation {
+    color: red;
+    ul {
+        color: red;
+        margin: 0 0 30px 0;
+    }
+}
+.field_with_errors {
+    @extend .has-error;
+    .form-control {
+        color: $state-danger-text;
+    }
+}
+```
+
+
+
+`app/views/users/new.html.erb`
+
+```html
+<% provide(:title, 'Sign up') %>
+<h1>Sign up</h1>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <%= form_for(@user) do |f| %>
+            <%= render 'shared/error_messages' %>
+            <%= f.label :name %>
+            <%= f.text_field :name %>
+            <%= f.label :email %>
+            <%= f.email_field :email %>
+            <%= f.label :password %>
+            <%= f.password_field :password %>
+            <%= f.label :password_confirmation, "Confirmation" %>
+            <%= f.password_field :password_confirmation %>
+            <%= f.submit "Create my account", class: "btn btn-primary" %>
+        <% end %>
+    </div>
+</div>
+```
+
+
+
+### Gitにあげる
+
+`Terminal`
+
+```zsh
+$ git add -A
+$ git commit -m "Finish user signup"
+$ git push prigin sign-up
+```
+
+masterにマージ
+
+`Terminal`
+
+```zsh
+$ git checkout master
+$ git merge sign-up
+$ git push
+```
+
