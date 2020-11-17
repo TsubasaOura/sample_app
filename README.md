@@ -758,6 +758,16 @@ $ git push
 
 
 
+### ユーザーモデルのブランチを作成
+
+`Terminal`
+
+```zsh
+$ git checkout -b "modeling-users"
+```
+
+
+
 ### ユーザーモデルを作成
 
 `Terminal`
@@ -972,7 +982,366 @@ $ git push
 
 
 
+### ユーザー登録のブランチを作成
+
+`Terminal`
+
+```zsh
+$ git chechout -b "sign-up"
+```
 
 
 
+### デバック機能を作成
+
+`app/view/layouts/application.html.erb`
+
+```html
+<body>
+    <%= render 'layouts/header' %>
+    <div class="container">
+        <%= yield %>
+        <%= render 'layouts/footer' %>
+        <%= debug(params) if Rails.env.development? %>
+    </div>
+</body> 
+```
+
+
+
+`app/assets/stylesheets/custom.scss`
+
+```css
+@import "bootstrap-sprockets";
+@import "bootstrap";
+/* mixins, variables, etc. */
+$gray-medium-light: #eaeaea;
+@mixin box_sizing {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.
+.
+.
+/* miscellaneous */
+.debug_dump {
+    clear: both;
+    float: left;
+    width: 100%;
+    margin-top: 45px;
+    @include box_sizing;
+}
+```
+
+
+
+### Userを表示させる
+
+ルート設定
+
+`config/routes.rb`
+
+```ruby
+Rails.application.routes.draw do
+    root 'static_pages#home'
+    get '/help', to: 'static_pages#help'
+    get '/about', to: 'static_pages#about'
+    get '/contact', to: 'static_pages#contact'
+    get '/signup', to: 'users#new'
+    resources :users
+end
+```
+
+
+
+`app/controllers/users_controller.rb`
+
+```ruby
+class UsersController < ApplicationController
+    def show
+    @user = User.find(params[:id])
+    end
+    def new
+    end
+end
+```
+
+
+
+`app/views/users/show.html.erb`
+
+```html
+<%= @user.name %>, <%= @user.email %>
+```
+
+
+
+### User登録画面を作成
+
+
+
+`app/controllers/users_controller.rb`
+
+```ruby
+class UsersController < ApplicationController
+    def show
+    @user = User.find(params[:id])
+    end
+    def new
+    @user = User.new
+    end
+end
+```
+
+
+
+`app/views/users/new.html.erb`
+
+```html
+<% provide(:title, 'Sign up') %>
+<h1>Sign up</h1>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <%= form_for(@user) do |f| %>
+            <%= f.label :name %>
+            <%= f.text_field :name %>
+            <%= f.label :email %>
+            <%= f.email_field :email %>
+            <%= f.label :password %>
+            <%= f.password_field :password %>
+            <%= f.label :password_confirmation, "Confirmation" %>
+            <%= f.password_field :password_confirmation %>
+            <%= f.submit "Create my account", class: "btn btn-primary" %>
+        <% end %>
+    </div>
+</div>
+```
+
+
+
+`app/assets/stylesheets/custom.scss`
+
+```css
+.
+.
+.
+/* forms */
+input, textarea, select, .uneditable-input {
+    border: 1px solid #bbb;
+    width: 100%;
+    margin-bottom: 15px;
+    @include box_sizing;
+}
+input {
+	height: auto !important;
+} 
+```
+
+
+
+`app/views/users/new.html.erb`
+
+```html
+<% provide(:title, 'Sign up') %>
+<h1>Sign up</h1>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <%= form_for(@user) do |f| %>
+            <%= f.label :name %>
+            <%= f.text_field :name %>
+            <%= f.label :email %>
+            <%= f.email_field :email %>
+            <%= f.label :password %>
+            <%= f.password_field :password %>
+            <%= f.label :password_confirmation, "Confirmation" %>
+            <%= f.password_field :password_confirmation %>
+            <%= f.submit "Create my account", class: "btn btn-primary" %>
+        <% end %>
+    </div>
+</div>
+```
+
+
+
+`app/assets/stylesheets/custom.scss`
+
+```css
+.
+.
+.
+/* forms */
+input, textarea, select, .uneditable-input {
+    border: 1px solid #bbb;
+    width: 100%;
+    margin-bottom: 15px;
+    @include box_sizing;
+}
+input {
+	height: auto !important;
+} 
+```
+
+
+
+`app/controllers/users_controller.rb`
+
+```ruby
+class UsersController < ApplicationController
+
+  def show
+    @user = User.find(params[:id])
+  end
+
+  def new
+    @user = User.new
+  end
+
+  def create
+    @user = User.new(user_params)
+    if @user.save
+      flash[:success] = "Welcome to the Sample App!"
+      render_to @user
+    else
+      render 'new'
+    end
+  end
+end
+```
+
+
+
+`app/views/layouts/application.html.erb`
+
+```html
+<!DOCTYPE html>
+<html>
+ .
+ .
+ .
+<body>
+    <%= render 'layouts/header' %>
+    <div class="container">
+        <% flash.each do |message_type, message| %>
+        <%= content_tag(:div, message, class: "alert alert-#{message_type}") %>
+        <% end %>
+        <%= yield %>
+        <%= render 'layouts/footer' %>
+        <%= debug(params) if Rails.env.development? %>
+    </div>
+    .
+    .
+    .
+</body>
+</html>
+```
+
+
+
+`app/views/shared/_error_messages.html.erb`
+
+```html
+<% if @user.errors.any? %>
+    <div id="error_explanation">
+        <div class="alert alert-danger">
+            The form contains <%= pluralize(@user.errors.count, "error") %>.
+        </div>
+        <ul>
+            <% @user.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+            <% end %>
+        </ul>
+    </div>
+<% end %>
+```
+
+
+
+`app/assets/stylesheets/custom.scss`
+
+```css
+.
+.
+/* forms */
+.
+.
+#error_explanation {
+    color: red;
+    ul {
+        color: red;
+        margin: 0 0 30px 0;
+    }
+}
+.field_with_errors {
+    @extend .has-error;
+    .form-control {
+        color: $state-danger-text;
+    }
+}
+```
+
+
+
+`app/views/users/new.html.erb`
+
+```html
+<% provide(:title, 'Sign up') %>
+<h1>Sign up</h1>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <%= form_for(@user) do |f| %>
+            <%= render 'shared/error_messages' %>
+            <%= f.label :name %>
+            <%= f.text_field :name %>
+            <%= f.label :email %>
+            <%= f.email_field :email %>
+            <%= f.label :password %>
+            <%= f.password_field :password %>
+            <%= f.label :password_confirmation, "Confirmation" %>
+            <%= f.password_field :password_confirmation %>
+            <%= f.submit "Create my account", class: "btn btn-primary" %>
+        <% end %>
+    </div>
+</div>
+```
+
+
+
+### Gitにあげる
+
+`Terminal`
+
+```zsh
+$ git add -A
+$ git commit -m "Finish user signup"
+$ git push prigin sign-up
+```
+
+masterにマージ
+
+`Terminal`
+
+```zsh
+$ git checkout master
+$ git merge sign-up
+$ git push
+```
+
+
+
+### 8. 基本的なログイン機構
+
+### 9. 発展的なログイン機構
+
+
+
+
+
+
+
+ A server is already running. Check /app_name/tmp/pids/server.pid.
+
+.pid サーバーのログファイル？
+
+ログインしたログが残ってて不具合が起きている
 
