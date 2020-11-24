@@ -1331,20 +1331,6 @@ $ git push
 
 ### 8. 基本的なログイン機構
 
-### 9. 発展的なログイン機構
-
-
-
-
-
-
-
- A server is already running. Check /app_name/tmp/pids/server.pid.
-
-.pid サーバーのログファイル？
-
-ログインしたログが残ってて不具合が起きている
-
 `app/views/shared/_error_messages.html.erb`
 
 ```html
@@ -1421,7 +1407,7 @@ $ git push
 ```zsh
 $ git add -A
 $ git commit -m "Finish user signup"
-$ git push prigin sign-up
+$ git push prigin basic-login
 ```
 
 masterにマージ
@@ -1430,7 +1416,18 @@ masterにマージ
 
 ```zsh
 $ git checkout master
-$ git merge sign-up
+$ git merge basic-login
 $ git push
 ```
 
+
+
+### 9. 発展的なログイン機構
+
+
+
+ A server is already running. Check /app_name/tmp/pids/server.pid.
+
+.pid サーバーのログファイル？
+
+ログインしたログが残ってて不具合が起きる
